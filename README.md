@@ -14,6 +14,8 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | \> | Changes the dot's direction to right |
 | < | Changes the dot's direction to left |
 | v | Changes the dot's direction to down |
+| \\ | A "mirror" that changes the dot's direction |
+| / | Another "mirror" that changes the dot's direction |
 | & | Ends the program |
 | "" | Marks a string that the value or print command can use |
 

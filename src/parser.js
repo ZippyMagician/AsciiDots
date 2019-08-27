@@ -96,6 +96,19 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             dot.dir = 3;
             return false;
+        case '/':
+            dot.basicMove();
+            if (dot.dir === 0) dot.dir = 3;
+            if (dot.dir === 1) dot.dir = 2;
+            if (dot.dir === 2) dot.dir = 1;
+            if (dot.dir === 3) dot.dir = 0;
+            return false;
+        case '\\':
+            dot.basicMove();
+            if (dot.dir === 0) dot.dir = 1;
+            if (dot.dir === 1) dot.dir = 0;
+            if (dot.dir === 2) dot.dir = 3;
+            if (dot.dir === 3) dot.dir = 2;
         case '#':
             dot.value = parseParam(false);
             return false;
