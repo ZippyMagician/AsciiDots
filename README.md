@@ -20,7 +20,7 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | "" | Marks a string that the value or print command can use |
 
 is the current syntax this interpreter supports.
-NOTE: Currently the `\\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!
+NOTE: Currently the `\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!
 
 ## Installation
 Run
