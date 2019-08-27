@@ -1,0 +1,22 @@
+{
+  "name": "asciidots-parser",
+  "version": "1.0.0",
+  "description": "Parses the Esolang ASCIIDots",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node ./bin/asciidots run ./examples/hello_world.ad"
+  },
+  "bin": {
+    "asciidots": "./bin/asciidots"
+  },
+  "keywords": [
+    "esolang",
+    "asciidots",
+    "parser"
+  ],
+  "author": "Joshua Barnett",
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
+}
