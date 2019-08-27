@@ -2,7 +2,7 @@
 This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolangs.org/wiki/AsciiDots)
 
 ## Current Syntax
-This project currently features an incomplete syntax, the following commands ARE supported:
+This project currently features an incomplete syntax, the following commands ARE supported:<br>
 |  **Character**  | **Description**                                                                            |
 |:----------------|-------------------------------------------------------------------------------------------:|
 |        \-       | Allows the dot to move horizontally                                                        |
