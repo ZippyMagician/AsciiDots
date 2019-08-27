@@ -52,7 +52,7 @@ class CellMap {
     }
 
     __parse__(map, input) {
-        let code = input.split(/\n/g).map(r => r.length < this.dimension[0] ? r + (' '.repeat(this.dimension[0] - r.length - 1)) : r);
+        let code = input.replace(/\r/g, '').split()[0].split(/\n/g).map(r => r.length < this.dimension[0] ? r + (' '.repeat(this.dimension[0] - r.length - 1)) : r);
         for (var y = 0; y < code.length; y++) {
             for (var x = 0; x < this.dimension[0]; x++) {
                 //console.log(code, x, y);

@@ -20,12 +20,13 @@ cli.getArgs(argv, (name, data) => {
     switch (name) {
         case 'run':
             if (typeof data === "object") {
-                fs.readFile(`${data[1]}/${data[0]}`, 'utf8', (err, dat) => {
+                fs.readFile(`${data[1]}/${data[0]}`, 'ascii', (err, dat) => {
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
                     execute(dat, arr);
                 });
             } else {
-                fs.readFile(data, 'utf8', (err, dat) => {
+                fs.readFile(data, 'ascii', (err, dat) => {
+                    dat = String.raw`${dat}`;
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
                     execute(dat, arr);
                 });
