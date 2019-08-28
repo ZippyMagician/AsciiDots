@@ -1,5 +1,5 @@
 # ASCIIDots
-This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolangs.org/wiki/AsciiDots)
+This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolangs.org/wiki/AsciiDots), created by **Aaron Janse**
 
 ## Current Syntax
 
