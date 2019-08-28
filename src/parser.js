@@ -1,4 +1,6 @@
-const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '/', '\\', '~', '[', ']', '{', '}', '&', '"', '+' ];
+const rl = require('readline-sync');
+const globe = require('./global/cells');
+const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'", '+' ];
 
 module.exports.parseCell = function (dot, cell, map) {
     let x = cell.x;
@@ -17,17 +19,14 @@ module.exports.parseCell = function (dot, cell, map) {
         moveCursor();
         dot.basicMove();
         try {
-            while (ops.indexOf(map.get(x, y).op) === -1) {
+            while (map.get(x, y).op !== '"' && map.get(x, y).op !== "'" && x < map.tiles.length) {
                 str += map.get(x, y).op;
                 moveCursor();
                 dot.basicMove();
             }
-            if (!map.get(x, y) || map.get(x, y).op !== '"') throw new Error("Invalid termination of string");
-            else {
-                if (newline) str += '\n';
-            }
+            if (newline) str += '\n';
         } catch (e) {
-            throw new Error("Line " + (y + 1) + " to long");
+            throw new Error(e);
         }
 
         return str;
@@ -46,13 +45,22 @@ module.exports.parseCell = function (dot, cell, map) {
     function parseParam(newline = true) {
         moveCursor();
         let cur = map.get(x, y);
-        if (cur.op === '"') {
+        if (cur.op === '"' || cur.op === "'") {
             dot.basicMove();
             return parseString(newline);
         }
         if (cur.op === "_") {
             dot.basicMove();
             return parseParam(false);
+        }
+        if (cur.op === "?") {
+            dot.basicMove();
+            let ret = rl.question("> ");
+            return isNaN(ret) ? ret.toString() : parseInt(ret);
+        }
+        if (cur.op === "a") {
+            dot.basicMove();
+            return String.fromCharCode(parseInt(parseParam(false)));
         }
         if (cur.op === "#") {
             dot.basicMove();
@@ -66,10 +74,24 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             return parseParamInt();
         }
-        throw new Error("Unrecognized parameter")
+        throw new Error("Unrecognized parameter: " + cell.op + " x: " + x + " y: " + y)
     }
 
-    //console.log("Parser called with op " + cell.op + " at x: " + x + " y: " + y);
+    function findOtherParens(dr) {
+        dot.dir = dr;
+        dir = dr;
+        if (dr === 0) {
+            while(map.get(x, y).op !== "(") {
+                moveCursor();
+                dot.basicMove();
+            }
+        } else {
+            while(map.get(x, y).op !== ")") {
+                moveCursor();
+                dot.basicMove();
+            }
+        }
+    }
 
     switch (cell.op) {
         case '-':
@@ -96,6 +118,15 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             dot.dir = 3;
             return false;
+        case '(':
+            dot.basicMove();
+            return false;
+        case ')':
+            dot.basicMove();
+            findOtherParens(0);
+            dir = 2;
+            dot.dir = 2;
+            return false;
         case '/':
             dot.basicMove();
             if (dot.dir === 0) dot.dir = 3;
@@ -110,16 +141,45 @@ module.exports.parseCell = function (dot, cell, map) {
             if (dot.dir === 2) dot.dir = 3;
             if (dot.dir === 3) dot.dir = 2;
         case '#':
+            dot.basicMove();
             dot.value = parseParam(false);
+            return false;
+        case '@':
+            dot.basicMove();
+            dot.address = parseParam(false);
             return false;
         case '$':
             dot.basicMove();
             console.log(parseParam());
-            break;
+            return false;
+        case '~':
+            let cel = globe.get(x, y);
+            if (!cel.dots[0] && dot.dir === 1) {
+                let obj = globe.get(x, y);
+                obj.dots[0] = dot;
+                globe.set(x, y, obj);
+            } else if (dot.dir === 2) {
+                cel.dots[1] = dot;
+                if (cel.dots[0] && cel.dots[0].value === 0) {
+                    dot.value = cel.dots[0].value;
+                    dot.basicMove();
+                    cel.dots[0].delete = true;
+                } else if (cel.dots[0]) {
+                    dot.value = cel.dots[0].value
+                    dot.basicMove();
+                    dot.dir = 1;
+                    cel.dots[0].delete = true;
+                }
+            }
+            return false;
         case '&':
             process.exit();
         case undefined:
-            process.exit();
+            dot.delete = true;
+            return true;
+        case ' ':
+            dot.delete = true;
+            return true;
     }
 
     return false;

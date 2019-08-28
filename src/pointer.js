@@ -5,6 +5,8 @@ class Pointer {
         this.dot = parent;
         this.map = map;
 
+        this.delete = false;
+
         this.value;
         this.address;
 

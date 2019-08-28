@@ -40,8 +40,9 @@ class CellMap {
         for (var y = 0; y < height; y++) {
             for (var x = 0; x < width; x++) {
                 let obj = {
-                    x, y,
-                    dots: 0,
+                    x: x, 
+                    y: y,
+                    dots: [],
                     op: ""
                 }
                 this.hash.tiles.push(obj);
@@ -59,7 +60,7 @@ class CellMap {
                 //console.log(map.tiles);
                 let obj = map.get(x, y);
                 obj.op = code[y][x];
-                obj.dots = obj.op === "." ? 1 : 0;
+                obj.dots = obj.op === "." ? 1 : new Array(2);
                 if(map.set(x, y, obj)) {} else throw new Error("Error encountered during the hashing of the tilemap");
             }
         }
