@@ -1,6 +1,8 @@
 const rl = require('readline-sync');
 const globe = require('./global/cells');
-const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'", '+' ];
+const DotParent = require('./index');
+const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'" ];
+const operations = [ '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠' ];
 
 module.exports.parseCell = function (dot, cell, map) {
     let x = cell.x;
@@ -34,7 +36,7 @@ module.exports.parseCell = function (dot, cell, map) {
 
     function parseParamInt() {
         let num = '';
-        while(ops.indexOf(map.get(x, y).op) === -1 && !isNaN(map.get(x, y).op)) {
+        while(ops.indexOf(map.get(x, y).op) === -1 && operations.indexOf(map.get(x, y).op) === -1 && !isNaN(map.get(x, y).op)) {
             num += map.get(x, y).op;
             moveCursor();
             dot.basicMove();
@@ -70,8 +72,11 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             return dot.address;
         }
+        if (operations.indexOf(cur.op) > -1) {
+            //dot.basicMove();
+            return cur.op;
+        }
         if (!isNaN(cur.op)) {
-            dot.basicMove();
             return parseParamInt();
         }
         throw new Error("Unrecognized parameter: " + cell.op + " x: " + x + " y: " + y)
@@ -92,9 +97,63 @@ module.exports.parseCell = function (dot, cell, map) {
             }
         }
     }
+    
+    function evalOperation(fir, op, sec) {
+        switch (op) {
+            case '*':
+                return fir * sec;
+            case '/':
+            case '÷':
+                return fir / sec;
+            case '+':
+                return fir + sec;
+            case '-':
+                return fir - sec;
+            case '%':
+                return fir % sec;
+            case '^':
+                return Math.pow(fir, sec);
+            case '&':
+                return fir && sec ? 1 : 0;
+            case '!':
+                return !(evalOperation(fir, map.get(x + 1, y).op, sec));
+            case 'o':
+                return fir || sec ? 1 : 0;
+            case 'x':
+                return !fir !== !sec ? 1 : 0;
+            case '>':
+                return fir > sec ? 1 : 0;
+            case '≥':
+                return fir >= sec ? 1 : 0;
+            case '<':
+                return fir < sec ? 1 : 0;
+            case '≤':
+                return fir <= sec ? 1 : 0;
+            case '=':
+                return fir === sec;
+            case '≠':
+                return fir !== sec;
+        }
+    }
+
+    function runOperationLoop() {
+        let op_cell = globe.get(x, y);
+        // First dot that is recorded is the horizontal one
+        if (!op_cell.dots[0] && (dot.dir === 0 || dot.dir === 2)) op_cell.dots[0] = dot;
+        else if (!op_cell.dots[1] && (dot.dir === 1 || dot.dir === 3)) op_cell.dots[1] = dot;
+        // Check if this is the vertical dot and there are two dots resting here
+        if (op_cell.dots[1] === dot && op_cell.dots[0]) {
+            dot.value = parseInt(evalOperation(parseInt(dot.value), cell.op, parseInt(op_cell.dots[0].value)));
+            dot.basicMove();
+            op_cell.dots[0].delete = true;
+            op_cell.dots = [false, false];
+        }
+        return false;
+    }
 
     switch (cell.op) {
         case '-':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             if (dir !== 0 && dir !== 2) throw new Error("Invalid operator \"-\" for direction " + dir);
             dot.basicMove();
             return false;
@@ -103,24 +162,57 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             return false;
         case '!':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"!\" for direction " + dir);
             dot.basicMove();
             return false;
         case '<':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
             dot.dir = 0;
             return false;
         case '^':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
             dot.dir = 1;
             return false;
         case '>':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
             dot.dir = 2;
             return false;
         case 'v':
             dot.basicMove();
             dot.dir = 3;
+            return false;
+        case '+':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
+            dot.basicMove();
+            return false;
+        case '*':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
+            if (dot.y < y) d = 1;
+            else if (dot.y > y) d = 3;
+            else if (dot.x < x) d = 0;
+            else if (dot.x > x) d = 2;
+
+            let dot_dirs = [];
+            if (d !== 0 && map.get(x - 1, y).op === "-") dot_dirs.push(0);
+            if (d !== 1 && map.get(x, y - 1).op === "|") dot_dirs.push(1);
+            if (d !== 2 && map.get(x + 1, y).op === "-") dot_dirs.push(2);
+            if (d !== 3 && map.get(x, y + 1).op === "|") dot_dirs.push(3);
+
+            for(var ind in dot_dirs) {
+                let dot_dir = dot_dirs[ind];
+                DotParent.createDot({ x: x, y: y, dir: dot_dir, value: dot.value}, map);
+            }
+            dot.delete = true;
+            return false;
+        case '[':
+            dot.basicMove();
+            return false;
+        case ']':
+            dot.basicMove();
             return false;
         case '(':
             dot.basicMove();
@@ -179,13 +271,26 @@ module.exports.parseCell = function (dot, cell, map) {
             }
             return false;
         case '&':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             process.exit();
         case undefined:
+        case null:
             dot.delete = true;
             return true;
         case ' ':
             dot.delete = true;
             return true;
+        // '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠'
+        case '/':
+        case '÷':
+        case '%':
+        case 'o':
+        case 'x':
+        case '≥':
+        case '≤':
+        case '=':
+        case '≠':
+            return runOperationLoop();
     }
 
     return false;

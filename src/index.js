@@ -1,5 +1,5 @@
 const CellMap = require('./cellmap');
-const PointerDot = require('./pointer');
+var PointerDot = require('./pointer');
 const globe = require('./global/cells');
 
 const requestAnimationFrame = function(f) {
@@ -7,7 +7,8 @@ const requestAnimationFrame = function(f) {
 };
 
 function main(input, map_size) {
-    let dots = [];
+    module.exports.dots = [];
+    let dots = module.exports.dots;
 
     let map = new CellMap(input, map_size);
     for (var dot in map.dot_pos) {
@@ -40,3 +41,7 @@ function dotTick(dots) {
 }
 
 module.exports.execute = main;
+
+module.exports.createDot = function createDot(parent, map) {
+    this.dots.push(new PointerDot(parent, map));
+}

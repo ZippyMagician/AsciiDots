@@ -1,6 +1,4 @@
-const parser = require('./parser');
-
-class Pointer {
+module.exports = class Pointer {
     constructor (parent, map) {
         this.dot = parent;
         this.map = map;
@@ -10,10 +8,12 @@ class Pointer {
         this.value;
         this.address;
 
+        if (parent.value) this.value = parent.value;
+
         this.x = this.dot.x;
         this.y = this.dot.y;
 
-        this.dir = this.findDir();
+        this.dir = parent.dir || this.findDir();
     }
 
     findDir() {
@@ -44,8 +44,6 @@ class Pointer {
 
     moveDot() {
         let next = this.getNextCell(this.dir);
-        parser.parseCell(this, next, this.map);
+        require('./parser').parseCell(this, next, this.map);
     }
 }
-
-module.exports = Pointer;
