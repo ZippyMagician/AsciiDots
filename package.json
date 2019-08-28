@@ -1,6 +1,6 @@
 {
     "name": "asciidots",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Parses the Esolang ASCIIDots",
     "main": "src/index.js",
     "scripts": {

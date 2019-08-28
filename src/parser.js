@@ -102,6 +102,10 @@ module.exports.parseCell = function (dot, cell, map) {
             if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"|\" for direction " + dir);
             dot.basicMove();
             return false;
+        case '!':
+            if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"!\" for direction " + dir);
+            dot.basicMove();
+            return false;
         case '<':
             dot.basicMove();
             dot.dir = 0;
@@ -163,11 +167,13 @@ module.exports.parseCell = function (dot, cell, map) {
                 if (cel.dots[0] && cel.dots[0].value === 0) {
                     dot.value = cel.dots[0].value;
                     dot.basicMove();
+                    if (map.get(x, y + 1).op === "!") dot.dir = 1;
                     cel.dots[0].delete = true;
                 } else if (cel.dots[0]) {
                     dot.value = cel.dots[0].value
                     dot.basicMove();
-                    dot.dir = 1;
+                    if (map.get(x, y + 1).op === "!") dot.dir = 2;
+                    else dot.dir = 1;
                     cel.dots[0].delete = true;
                 }
             }

@@ -8,6 +8,7 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | \- | Allows the dot to move horizontally |
 | \| | Allows the dot to move vertically |
 | ~ | Takes a dot input from the bottom and left; if the bottom's value is 0, then the left one continues on to the right. If the bottom's value is not, then the dot coming from the left starts moving upward |
+| ! | If underneath a `~`, reverse it so that 0 makes the dot move up and any other number makes it continue on right |
 | $ | Prints a value to the console |
 | # | Sets the value of the dot, can also be used to get the value of the dot in a print command |
 | @ | Sets the address of the dot, can also be used to get the address of the dot in a print command |
