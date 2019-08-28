@@ -1,5 +1,2 @@
 # Ignores node_modules folder
 node_modules/
-
-# Ignores certain files
-publish.bat
