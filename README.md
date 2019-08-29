@@ -28,8 +28,8 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | & | Ends the program |
 | "" or '' | Marks a string that the value or print command can use |
 
-For more in-depth information and to see the full (not yet implemented) character set, please visit the Wiki page linked at the top of the README
-NOTE: Currently the `\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!
+For more in-depth information and to see the full (not yet implemented) character set, please visit the Wiki page linked at the top of the __README__<br>
+*NOTE*: Currently the `\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!
 
 ## Installation
 Run
