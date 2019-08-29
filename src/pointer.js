@@ -1,3 +1,6 @@
+const move1 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
+const move2 = [ '|', '>', 'v', '<', '^', '/', '\\', '+' ];
+
 module.exports = class Pointer {
     constructor (parent, map) {
         this.dot = parent;
@@ -5,8 +8,8 @@ module.exports = class Pointer {
 
         this.delete = false;
 
-        this.value;
-        this.address;
+        this.value = 0;
+        this.address = 0;
 
         if (parent.value) this.value = parent.value;
 
@@ -20,10 +23,10 @@ module.exports = class Pointer {
         let x = this.x;
         let y = this.y;
 
-        if (this.map.get(x - 1, y) && this.map.get(x - 1, y).op === "-") return 0;
-        if (this.map.get(x, y - 1) && this.map.get(x, y - 1).op === "|") return 1;
-        if (this.map.get(x + 1, y) && this.map.get(x + 1, y).op === "-") return 2;
-        if (this.map.get(x, y + 1) && this.map.get(x, y + 1).op === "|") return 3;
+        if (this.map.get(x - 1, y) && move1.indexOf(this.map.get(x - 1, y).op) > -1) return 0;
+        if (this.map.get(x, y - 1) && move2.indexOf(this.map.get(x, y - 1).op) > -1) return 1;
+        if (this.map.get(x + 1, y) && move1.indexOf(this.map.get(x + 1, y).op) > -1) return 2;
+        if (this.map.get(x, y + 1) && move2.indexOf(this.map.get(x, y + 1).op) > -1) return 3;
 
         throw new Error("No valid dot direction found");
     }

@@ -1,8 +1,11 @@
 const rl = require('readline-sync');
 const globe = require('./global/cells');
 const DotParent = require('./index');
+
 const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'" ];
 const operations = [ '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠' ];
+const move1 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
+const move2 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
 
 module.exports.parseCell = function (dot, cell, map) {
     let x = cell.x;
@@ -197,10 +200,10 @@ module.exports.parseCell = function (dot, cell, map) {
             else if (dot.x > x) d = 2;
 
             let dot_dirs = [];
-            if (d !== 0 && map.get(x - 1, y).op === "-") dot_dirs.push(0);
-            if (d !== 1 && map.get(x, y - 1).op === "|") dot_dirs.push(1);
-            if (d !== 2 && map.get(x + 1, y).op === "-") dot_dirs.push(2);
-            if (d !== 3 && map.get(x, y + 1).op === "|") dot_dirs.push(3);
+            if (d !== 0 && move1.indexOf(map.get(x - 1, y).op) > -1) dot_dirs.push(0);
+            if (d !== 1 && move2.indexOf(map.get(x, y - 1).op) > -1) dot_dirs.push(1);
+            if (d !== 2 && move1.indexOf(map.get(x + 1, y).op) > -1) dot_dirs.push(2);
+            if (d !== 3 && move2.indexOf(map.get(x, y + 1).op) > -1) dot_dirs.push(3);
 
             for(var ind in dot_dirs) {
                 let dot_dir = dot_dirs[ind];
