@@ -41,6 +41,6 @@ to install Asciidots globally
 ## Running
 Use the command
 ```sh
-asciidots run FILE_PATH
+asciidots-js run FILE_PATH
 ```
 to run a file with the asciidots interpreter.
