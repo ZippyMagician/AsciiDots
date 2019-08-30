@@ -143,9 +143,10 @@ module.exports.parseCell = function (dot, cell, map) {
 
     function runOperationLoop() {
         let op_cell = globe.get(x, y);
+        let curly = map.get(x - 1, y).op === "{";
         // First dot that is recorded is the horizontal one
-        if (!op_cell.dots[0] && (dot.dir === 0 || dot.dir === 2)) op_cell.dots[0] = dot;
-        else if (!op_cell.dots[1] && (dot.dir === 1 || dot.dir === 3)) op_cell.dots[1] = dot;
+        if (!op_cell.dots[curly ? 1 : 0] && (dot.dir === 0 || dot.dir === 2)) op_cell.dots[curly ? 1 : 0] = dot;
+        else if (!op_cell.dots[curly ? 0 : 1] && (dot.dir === 1 || dot.dir === 3)) op_cell.dots[curly ? 0 : 1] = dot;
         // Check if this is the vertical dot and there are two dots resting here
         if (op_cell.dots[1] === dot && op_cell.dots[0]) {
             dot.value = parseInt(evalOperation(parseInt(dot.value), cell.op, parseInt(op_cell.dots[0].value)));
@@ -214,9 +215,11 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.delete = true;
             return false;
         case '[':
+        case '{':
             dot.basicMove();
             return false;
         case ']':
+        case '}':
             dot.basicMove();
             return false;
         case '(':

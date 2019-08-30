@@ -25,6 +25,7 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | / | Another "mirror" that changes the dot's direction |
 | () | Anything inside these parentheses will loop forever |
 | [] | Operation inside will be evaluated; a vertical-moving dot will be eval'd against a horizontal dot. The horizontal dot will be deleted and the vertical will continue |
+| {} | Operates similar to `[]`, but a horizontal dot is eval'd against a vertical dot and the horizontal dot is outputed |
 | & | Ends the program |
 | "" or '' | Marks a string that the value or print command can use |
 
