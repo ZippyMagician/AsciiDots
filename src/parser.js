@@ -227,6 +227,7 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.dir = 2;
             return false;
         case '/':
+            if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
             if (dot.dir === 0) dot.dir = 3;
             if (dot.dir === 1) dot.dir = 2;
@@ -284,7 +285,6 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.delete = true;
             return true;
         // '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠'
-        case '/':
         case '÷':
         case '%':
         case 'o':
