@@ -4,8 +4,10 @@ const DotParent = require('./index');
 
 const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'" ];
 const operations = [ '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠' ];
-const move1 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
-const move2 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
+const move_right = [ '-', '>', 'v', '^', '/', '\\', '+', '#', '@', '[', '(', '{', '$' ]; // Right
+const move_left = [ '-', 'v', '<', '^', '/', '\\', '+', '#', '@', ']', ')', '}', '$' ]; // Left
+const move_up = [ '|', '>', '<', '^', '/', '\\', '+', '#', '@', '$' ]; // Up
+const move_down = [ '|', '>', '<', 'v', '/', '\\', '+', '#', '@', '$' ]; // Down
 
 module.exports.parseCell = function (dot, cell, map) {
     let x = cell.x;
@@ -200,11 +202,11 @@ module.exports.parseCell = function (dot, cell, map) {
             else if (dot.x > x) d = 2;
 
             let dot_dirs = [];
-            if (d !== 0 && move1.indexOf(map.get(x - 1, y).op) > -1) dot_dirs.push(0);
-            if (d !== 1 && move2.indexOf(map.get(x, y - 1).op) > -1) dot_dirs.push(1);
-            if (d !== 2 && move1.indexOf(map.get(x + 1, y).op) > -1) dot_dirs.push(2);
-            if (d !== 3 && move2.indexOf(map.get(x, y + 1).op) > -1) dot_dirs.push(3);
-
+            if (d !== 0 && move_left.indexOf(map.get(x - 1, y).op) > -1) dot_dirs.push(0);
+            if (d !== 1 && move_up.indexOf(map.get(x, y - 1).op) > -1) dot_dirs.push(1);
+            if (d !== 2 && move_right.indexOf(map.get(x + 1, y).op) > -1) dot_dirs.push(2);
+            if (d !== 3 && move_down.indexOf(map.get(x, y + 1).op) > -1) dot_dirs.push(3);
+            
             for(var ind in dot_dirs) {
                 let dot_dir = dot_dirs[ind];
                 DotParent.createDot({ x: x, y: y, dir: dot_dir, value: dot.value}, map);
@@ -233,16 +235,16 @@ module.exports.parseCell = function (dot, cell, map) {
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
             if (dot.dir === 0) dot.dir = 3;
-            if (dot.dir === 1) dot.dir = 2;
-            if (dot.dir === 2) dot.dir = 1;
-            if (dot.dir === 3) dot.dir = 0;
+            else if (dot.dir === 1) dot.dir = 2;
+            else if (dot.dir === 2) dot.dir = 1;
+            else if (dot.dir === 3) dot.dir = 0;
             return false;
         case '\\':
             dot.basicMove();
             if (dot.dir === 0) dot.dir = 1;
-            if (dot.dir === 1) dot.dir = 0;
-            if (dot.dir === 2) dot.dir = 3;
-            if (dot.dir === 3) dot.dir = 2;
+            else if (dot.dir === 1) dot.dir = 0;
+            else if (dot.dir === 2) dot.dir = 3;
+            else if (dot.dir === 3) dot.dir = 2;
         case '#':
             dot.basicMove();
             dot.value = parseParam(false);

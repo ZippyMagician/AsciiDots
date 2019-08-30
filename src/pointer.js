@@ -1,5 +1,6 @@
 const move1 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
 const move2 = [ '|', '>', 'v', '<', '^', '/', '\\', '+' ];
+const parser = require('./parser');
 
 module.exports = class Pointer {
     constructor (parent, map) {
@@ -16,7 +17,7 @@ module.exports = class Pointer {
         this.x = this.dot.x;
         this.y = this.dot.y;
 
-        this.dir = parent.dir || this.findDir();
+        this.dir = parent.dir !== undefined ? parent.dir : this.findDir();
     }
 
     findDir() {
@@ -47,6 +48,6 @@ module.exports = class Pointer {
 
     moveDot() {
         let next = this.getNextCell(this.dir);
-        require('./parser').parseCell(this, next, this.map);
+        parser.parseCell(this, next, this.map);
     }
 }
