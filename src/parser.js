@@ -4,10 +4,10 @@ const DotParent = require('./index');
 
 const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'" ];
 const operations = [ '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠' ];
-const move_right = [ '-', '>', 'v', '^', '/', '\\', '+', '#', '@', '[', '(', '{', '$' ]; // Right
-const move_left = [ '-', 'v', '<', '^', '/', '\\', '+', '#', '@', ']', ')', '}', '$' ]; // Left
-const move_up = [ '|', '>', '<', '^', '/', '\\', '+', '#', '@', '$' ]; // Up
-const move_down = [ '|', '>', '<', 'v', '/', '\\', '+', '#', '@', '$' ]; // Down
+const move_right = [ '-', '>', 'v', '^', '/', '\\', '+', '#', '@', '[', '(', '{', '$', '~' ]; // Right
+const move_left = [ '-', 'v', '<', '^', '/', '\\', '+', '#', '@', ']', ')', '}', '$', '~' ]; // Left
+const move_up = [ '|', '>', '<', '^', '/', '\\', '+', '*', '#', '@', '$', '~', '!' ]; // Up
+const move_down = [ '|', '>', '<', 'v', '/', '\\', '+', '*', '#', '@', '$', '~' ]; // Down
 
 module.exports.parseCell = function (dot, cell, map) {
     let x = cell.x;
@@ -121,7 +121,7 @@ module.exports.parseCell = function (dot, cell, map) {
             case '&':
                 return fir && sec ? 1 : 0;
             case '!':
-                return !(evalOperation(fir, map.get(x + 1, y).op, sec));
+                return fir !== sec ? 1 : 0;
             case 'o':
                 return fir || sec ? 1 : 0;
             case 'x':
@@ -231,6 +231,14 @@ module.exports.parseCell = function (dot, cell, map) {
             dir = 2;
             dot.dir = 2;
             return false;
+        case ':':
+            dot.basicMove();
+            if (dot.value === 0) dot.delete = true;
+            return false;
+        case ';':
+            dot.basicMove();
+            if (dot.value === 1) dot.delete = true;
+            return false;
         case '/':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
@@ -260,22 +268,19 @@ module.exports.parseCell = function (dot, cell, map) {
         case '~':
             let cel = globe.get(x, y);
             if (!cel.dots[0] && dot.dir === 1) {
-                let obj = globe.get(x, y);
-                obj.dots[0] = dot;
-                globe.set(x, y, obj);
-            } else if (dot.dir === 2) {
+                cel.dots[0] = dot;
+            } else if (dot.dir === 2 || dot.dir === 0) {
                 cel.dots[1] = dot;
                 if (cel.dots[0] && cel.dots[0].value === 0) {
-                    dot.value = cel.dots[0].value;
                     dot.basicMove();
-                    if (map.get(x, y + 1).op === "!") dot.dir = 1;
+                    if (map.get(x, y + 1).op === "!" && (map.get(x - 1, y + 1).op !== "[" && map.get(x - 1, y + 1).op !== "{")) dot.dir = 1;
                     cel.dots[0].delete = true;
+                    cel.dots = [false, false];
                 } else if (cel.dots[0]) {
-                    dot.value = cel.dots[0].value
                     dot.basicMove();
-                    if (map.get(x, y + 1).op === "!") dot.dir = 2;
-                    else dot.dir = 1;
+                    if (map.get(x, y + 1).op !== "!" || (map.get(x, y + 1).op === "!" && (map.get(x - 1, y + 1).op === "[" || map.get(x - 1, y + 1).op === "{"))) dot.dir = 1;
                     cel.dots[0].delete = true;
+                    cel.dots = [false, false];
                 }
             }
             return false;

@@ -9,6 +9,8 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | \| | Allows the dot to move vertically |
 | + | Acts as crossroads; dots can pass through this horizontally or vertically |
 | ~ | Takes a dot input from the bottom and left; if the bottom's value is 0, then the left one continues on to the right. If the bottom's value is not, then the dot coming from the left starts moving upward |
+| : | If a dot passes this and has a value equal to 0, it is deleted |
+| ; | If a dot passes this and has a value equal to 1, it is deleted |
 | ! | If underneath a `~`, reverse it so that 0 makes the dot move up and any other number makes it continue on right |
 | $ | Prints a value to the console |
 | # | Sets the value of the dot, can also be used to get the value of the dot in a print command |
@@ -29,8 +31,8 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | & | Ends the program |
 | "" or '' | Marks a string that the value or print command can use |
 
-For more in-depth information and to see the full (not yet implemented) character set, please visit the Wiki page linked at the top of the __README__<br>
-*NOTE*: Currently the `\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!
+*NOTE*: Currently the `\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!<br>
+If there is any functionality missing (Workes on the [official website](https://asciidots.herokuapp.com) and doesn't work here) then please leave an issue on github with the code that should work! Thanks :)
 
 ## Installation
 Run
