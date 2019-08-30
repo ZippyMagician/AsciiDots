@@ -32,7 +32,7 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | "" or '' | Marks a string that the value or print command can use |
 
 *NOTE*: Currently the `\` character is broken and will not work in the interpreter. If anyone has any solutions, please contact me on github!<br>
-If there is any functionality missing (Workes on the [official website](https://asciidots.herokuapp.com) and doesn't work here) then please leave an issue on github with the code that should work! Thanks :)
+If there is any functionality missing (Works on the [official website](https://asciidots.herokuapp.com) and doesn't work here) then please leave an issue on github with the code that should work! Thanks :)
 
 ## Installation
 Run
