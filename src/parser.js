@@ -221,9 +221,6 @@ module.exports.parseCell = function (dot, cell, map) {
             return false;
         case '(':
             dot.basicMove();
-            findOtherParens(2);
-            dir = 0;
-            dot.dir = 0;
             return false;
         case ')':
             dot.basicMove();
