@@ -21,13 +21,13 @@ cli.getArgs(argv, (name, data) => {
         case 'run':
             if (typeof data === "object") {
                 fs.readFile(`${data[1]}/${data[0]}`, 'ascii', (err, dat) => {
-                    dat = String.raw`${dat}`; // Make sure backslashes work
+                    dat = String.raw`${dat}`.replace(/C7/g, '/'); // Make sure backslashes work, replace division sign
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
                     execute(dat, arr);
                 });
             } else {
                 fs.readFile(data, 'ascii', (err, dat) => {
-                    dat = String.raw`${dat}`;
+                    dat = String.raw`${dat}`.replace(/C7/g, '/');;
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
                     execute(dat, arr);
                 });

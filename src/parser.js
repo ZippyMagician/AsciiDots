@@ -21,12 +21,12 @@ module.exports.parseCell = function (dot, cell, map) {
         if (dir === 3) y += 1;
     }
 
-    function parseString(newline) {
+    function parseString(newline, op) {
         let str = "";
         moveCursor();
         dot.basicMove();
         try {
-            while (map.get(x, y).op !== '"' && map.get(x, y).op !== "'" && x < map.tiles.length) {
+            while (map.get(x, y).op !== op && x < map.tiles.length) {
                 str += map.get(x, y).op;
                 moveCursor();
                 dot.basicMove();
@@ -54,7 +54,7 @@ module.exports.parseCell = function (dot, cell, map) {
         let cur = map.get(x, y);
         if (cur.op === '"' || cur.op === "'") {
             dot.basicMove();
-            return parseString(newline);
+            return parseString(newline, cur.op);
         }
         if (cur.op === "_") {
             dot.basicMove();
@@ -156,20 +156,20 @@ module.exports.parseCell = function (dot, cell, map) {
         }
         return false;
     }
-    
+
     switch (cell.op) {
         case '-':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
-            if (dir !== 0 && dir !== 2) throw new Error("Invalid operator \"-\" for direction " + dir);
+            if (dir !== 0 && dir !== 2) throw new Error("Invalid operator \"-\" for direction " + dir + " at position " + x + " " + y);
             dot.basicMove();
             return false;
         case '|':
-            if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"|\" for direction " + dir);
+            if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"|\" for direction " + dir + " at position " + x + " " + y);
             dot.basicMove();
             return false;
         case '!':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
-            if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"!\" for direction " + dir);
+            if (dir !== 1 && dir !== 3) throw new Error("Invalid operator \"!\" for direction " + dir + " at position " + x + " " + y);
             dot.basicMove();
             return false;
         case '<':
