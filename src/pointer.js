@@ -24,10 +24,10 @@ module.exports = class Pointer {
         let x = this.x;
         let y = this.y;
 
-        if (this.map.get(x - 1, y) && move1.indexOf(this.map.get(x - 1, y).op) > -1) return 0;
-        if (this.map.get(x, y - 1) && move2.indexOf(this.map.get(x, y - 1).op) > -1) return 1;
-        if (this.map.get(x + 1, y) && move1.indexOf(this.map.get(x + 1, y).op) > -1) return 2;
-        if (this.map.get(x, y + 1) && move2.indexOf(this.map.get(x, y + 1).op) > -1) return 3;
+        if (this.map.get(x, y - 1) && move2.indexOf(this.map.get(x, y - 1).op) > -1) return 1; // Up
+        if (this.map.get(x + 1, y) && move1.indexOf(this.map.get(x + 1, y).op) > -1) return 2; // Right
+        if (this.map.get(x, y + 1) && move2.indexOf(this.map.get(x, y + 1).op) > -1) return 3; // Down
+        if (this.map.get(x - 1, y) && move1.indexOf(this.map.get(x - 1, y).op) > -1) return 0; // Left
 
         throw new Error("No valid dot direction found");
     }
