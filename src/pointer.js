@@ -1,5 +1,5 @@
-const move1 = [ '-', '>', 'v', '<', '^', '/', '\\', '+' ];
-const move2 = [ '|', '>', 'v', '<', '^', '/', '\\', '+' ];
+const move1 = [ '-', '>', 'v', '<', '^', '/', '\\', '+', '*' ];
+const move2 = [ '|', '>', 'v', '<', '^', '/', '\\', '+', '*' ];
 const parser = require('./parser');
 
 module.exports = class Pointer {

@@ -21,6 +21,7 @@ cli.getArgs(argv, (name, data) => {
         case 'run':
             if (typeof data === "object") {
                 fs.readFile(`${data[1]}/${data[0]}`, 'ascii', (err, dat) => {
+                    dat = String.raw`${dat}`; // Make sure backslashes work
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
                     execute(dat, arr);
                 });

@@ -156,7 +156,7 @@ module.exports.parseCell = function (dot, cell, map) {
         }
         return false;
     }
-
+    
     switch (cell.op) {
         case '-':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
@@ -253,6 +253,7 @@ module.exports.parseCell = function (dot, cell, map) {
             else if (dot.dir === 1) dot.dir = 0;
             else if (dot.dir === 2) dot.dir = 3;
             else if (dot.dir === 3) dot.dir = 2;
+            return false;
         case '#':
             dot.basicMove();
             dot.value = parseParam(false);
@@ -304,6 +305,9 @@ module.exports.parseCell = function (dot, cell, map) {
         case '=':
         case '≠':
             return runOperationLoop();
+        case '.': // Move past dot (for code golfing)
+            dot.basicMove();
+            return false;
     }
 
     return false;
