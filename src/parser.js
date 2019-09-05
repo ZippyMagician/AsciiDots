@@ -121,7 +121,7 @@ module.exports.parseCell = function (dot, cell, map) {
             case '&':
                 return !!fir && !!sec ? 1 : 0;
             case '!':
-                return !!fir !== !!sec ? 1 : 0;
+                return fir !== sec ? 1 : 0;
             case 'o':
                 return !!fir || !!sec ? 1 : 0;
             case 'x':
