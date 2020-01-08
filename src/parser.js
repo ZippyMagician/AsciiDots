@@ -1,6 +1,6 @@
 const rl = require('readline-sync');
 const globe = require('./global/cells');
-const DotParent = require('./index');
+const parent = require('./index');
 
 const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'" ];
 const operations = [ '*', '/', '÷', '+', '-', '%', '^', '&', '!', 'o', 'x', '>', '≥', '<', '≤', '=', '≠' ];
@@ -210,7 +210,7 @@ module.exports.parseCell = function (dot, cell, map) {
             
             for(var ind in dot_dirs) {
                 let dot_dir = dot_dirs[ind];
-                DotParent.createDot({ x: x, y: y, dir: dot_dir, value: dot.value}, map);
+                parent.createDot({ x: x, y: y, dir: dot_dir, value: dot.value}, map);
             }
             dot.delete = true;
             return false;
