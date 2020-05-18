@@ -291,7 +291,7 @@ module.exports.parseCell = function (dot, cell, map) {
             return false;
         case '&':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
-            return terminate();
+            return process.exit();
         case undefined:
         case null:
             dot.delete = true;
@@ -312,7 +312,21 @@ module.exports.parseCell = function (dot, cell, map) {
         case '.': // Move past dot (for code golfing)
             dot.basicMove();
             return false;
-        default:
+        default: // TODO: Do file warpmap.js (WarpMapper) so this code functions.
+            // if (map.warps.isWarp(cell.op)) {
+            //     dot.basicMove();
+            //     if (map.warps.isHomeWarp(cell.op)) {
+            //         dot.changeMap(dot.prevMap, dot.prevX, dot.prevY);
+            //     } else if (map.warps.isImportWarp(cell.op)) {
+            //         let [mMap, mX, mY] = map.warps.getImportData(cell.op);
+            //         dot.changeMap(mMap, mX, mY);
+            //     } else {
+            //         let pos = map.warps.find(cell.op, dot.x, dot.y);
+            //         dot.x = pos.x;
+            //         dot.y = pos.y;
+            //     }
+            //     return false;
+            // }
             dot.basicMove();
             return false;
     }

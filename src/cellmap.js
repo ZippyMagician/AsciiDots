@@ -1,7 +1,8 @@
 class CellMap {
-    constructor(code, size) {
+    constructor(code, size) {//, warps) {
         this.dimension = size;
         this.input = code;
+        //this.warps = warps;
 
         this.hash = {
             tiles: [],
@@ -25,15 +26,16 @@ class CellMap {
                 for (var i in this.tiles) {
                     if (this.tiles[i].dots > 0) this.dot_pos.push(this.tiles[i]);
                 }
-            }
+            }/*,
+            warps: warps*/
         };
         
-        this.hash = this.__parse__(this.__init__(this.dimension), this.input);
+        this.hash = this.parse(this.init(this.dimension), this.input);
 
         return this.hash;
     }
 
-    __init__(size) {
+    init(size) {
         let width = size[0];
         let height = size[1];
 
@@ -52,7 +54,7 @@ class CellMap {
         return this.hash;
     }
 
-    __parse__(map, input) {
+    parse(map, input) {
         let code = input.replace(/\r/g, '').split()[0].split(/\n/g).map(r => r.length < this.dimension[0] ? r + (' '.repeat(this.dimension[0] - r.length - 1)) : r);
         for (var y = 0; y < code.length; y++) {
             for (var x = 0; x < this.dimension[0]; x++) {

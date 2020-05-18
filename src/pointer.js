@@ -50,4 +50,14 @@ module.exports = class Pointer {
         let next = this.getNextCell(this.dir);
         parser.parseCell(this, next, this.map);
     }
+
+    changeMap(newMap, x, y) {
+        this.prevMap = this.map;
+        this.prevX = x;
+        this.prevY = y;
+        this.map = newMap;
+
+        this.x = x;
+        this.y = y;
+    }
 }
