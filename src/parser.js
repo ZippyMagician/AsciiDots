@@ -49,7 +49,7 @@ module.exports.parseCell = function (dot, cell, map) {
         return parseInt(num);
     }
 
-    function parseParam(newline = true) {
+    function parseParam(newline = true, special_case = false) {
         moveCursor();
         let cur = map.get(x, y);
         if (cur.op === '"' || cur.op === "'") {
@@ -77,14 +77,15 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             return dot.address;
         }
-        if (operations.indexOf(cur.op) > -1) {
+        if (operations.indexOf(cur.op) > -1 && !special_case) {
             //dot.basicMove();
             return cur.op;
         }
-        if (!isNaN(cur.op)) {
+        if (!isNaN(cur.op) && cur.op !== "-") {
             return parseParamInt();
         }
-        throw new Error("Unrecognized parameter: " + cell.op + " x: " + x + " y: " + y)
+        //throw new Error("Unrecognized parameter: " + cell.op + " x: " + x + " y: " + y)
+        return false;
     }
 
     function findOtherParens(dr) {
@@ -157,6 +158,7 @@ module.exports.parseCell = function (dot, cell, map) {
         return false;
     }
 
+    let val;
     switch (cell.op) {
         case '-':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
@@ -224,12 +226,11 @@ module.exports.parseCell = function (dot, cell, map) {
             return false;
         case '(':
             dot.basicMove();
+            dot.dir = 2;
             return false;
         case ')':
             dot.basicMove();
-            findOtherParens(0);
-            dir = 2;
-            dot.dir = 2;
+            dot.dir = 0;
             return false;
         case ':':
             dot.basicMove();
@@ -256,15 +257,18 @@ module.exports.parseCell = function (dot, cell, map) {
             return false;
         case '#':
             dot.basicMove();
-            dot.value = parseParam(false);
+            val = parseParam(false, true);
+            dot.value = val === false ? dot.value : val;
             return false;
         case '@':
             dot.basicMove();
-            dot.address = parseParam(false);
+            val = parseParam(false, true);
+            dot.address = val === false ? dot.address : val;
             return false;
         case '$':
             dot.basicMove();
-            console.log(parseParam());
+            val = parseParam(true, true);
+            if (val !== false) console.log(val);
             return false;
         case '~':
             let cel = globe.get(x, y);
@@ -287,7 +291,7 @@ module.exports.parseCell = function (dot, cell, map) {
             return false;
         case '&':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
-            process.exit();
+            return terminate();
         case undefined:
         case null:
             dot.delete = true;
@@ -306,6 +310,9 @@ module.exports.parseCell = function (dot, cell, map) {
         case '≠':
             return runOperationLoop();
         case '.': // Move past dot (for code golfing)
+            dot.basicMove();
+            return false;
+        default:
             dot.basicMove();
             return false;
     }
