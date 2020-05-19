@@ -272,7 +272,6 @@ module.exports.parseCell = function (dot, cell, map) {
             if (val !== false) console.log(val);
             return false;
         case '~':
-            console.log("tilde")
             let cel = map.warps.fileName ? warpGlobe.maps[map.warps.fileName].get(x, y) : globe.get(x, y);
             if (!cel.dots[0] && dot.dir === 1) {
                 cel.dots[0] = dot;
@@ -318,10 +317,8 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
 
             if (map.warps.isHomeWarp(cell.op)) {
-                console.log("home warp")
                 dot.revertMap();
             } else if (map.warps.isImportWarp(cell.op)) {
-                console.log("import warp")
                 let data = map.warps.getImport(cell.op);
                 dot.changeMap(data[0], data[1], data[2])
             } else if (map.warps.isWarp(cell.op)) {

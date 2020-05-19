@@ -103,7 +103,7 @@ module.exports = class WarpMapper {
                     return resolve([new CellMap(dat, arr, wMap), wMap.find(wMap.hWarps[0]).x, wMap.find(wMap.hWarps[0]).y]);
                 });
             } else {
-                fs.readFile('src/libs/' + file, 'ascii', (err, dat) => {
+                fs.readFile(__dirname + "/libs/" + file, 'ascii', (err, dat) => {
                     if (err) return reject(err);
                     dat = String.raw`${dat}`.replace(/C7/g, '/');
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
