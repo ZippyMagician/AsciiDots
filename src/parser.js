@@ -1,5 +1,6 @@
 const rl = require('readline-sync');
 const globe = require('./global/cells');
+const warpGlobe = require('./global/warp_cells');
 const parent = require('./index');
 
 const ops = [ '-', '|', '<', '^', '>', 'v', '.', '#', '@', '%', '?', '/', '\\', '~', '[', ']', '{', '}', '&', '"', "'" ];
@@ -31,7 +32,7 @@ module.exports.parseCell = function (dot, cell, map) {
                 moveCursor();
                 dot.basicMove();
             }
-            if (newline) str += '\n';
+            // if (newline) str += '\n';
         } catch (e) {
             throw new Error(e);
         }
@@ -143,7 +144,7 @@ module.exports.parseCell = function (dot, cell, map) {
     }
 
     function runOperationLoop() {
-        let op_cell = globe.get(x, y);
+        let op_cell = map.warps.fileName ? warpGlobe.maps[map.warps.fileName].get(x, y) : globe.get(x, y);
         let curly = map.get(x - 1, y).op === "{";
         // First dot that is recorded is the horizontal one
         if (!op_cell.dots[curly ? 1 : 0] && (dot.dir === 0 || dot.dir === 2)) op_cell.dots[curly ? 1 : 0] = dot;
@@ -157,7 +158,7 @@ module.exports.parseCell = function (dot, cell, map) {
         }
         return false;
     }
-
+    
     let val;
     switch (cell.op) {
         case '-':
@@ -177,21 +178,21 @@ module.exports.parseCell = function (dot, cell, map) {
         case '<':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
-            dot.dir = 0;
+            dot.dir = dot.dir === 2 ? 2 : 0;
             return false;
         case '^':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
-            dot.dir = 1;
+            dot.dir = dot.dir === 3 ? 3 : 1;
             return false;
         case '>':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
             dot.basicMove();
-            dot.dir = 2;
+            dot.dir = dot.dir === 0 ? 0 : 2;
             return false;
         case 'v':
             dot.basicMove();
-            dot.dir = 3;
+            dot.dir = dot.dir === 1 ? 1 : 3;
             return false;
         case '+':
             if (map.get(x - 1, y).op && (map.get(x - 1, y).op === "[" || map.get(x - 1, y).op === "{")) return runOperationLoop();
@@ -212,7 +213,7 @@ module.exports.parseCell = function (dot, cell, map) {
             
             for(var ind in dot_dirs) {
                 let dot_dir = dot_dirs[ind];
-                parent.createDot({ x: x, y: y, dir: dot_dir, value: dot.value}, map);
+                parent.createDot(dot.createDot(x, y, dot_dir));
             }
             dot.delete = true;
             return false;
@@ -271,7 +272,8 @@ module.exports.parseCell = function (dot, cell, map) {
             if (val !== false) console.log(val);
             return false;
         case '~':
-            let cel = globe.get(x, y);
+            console.log("tilde")
+            let cel = map.warps.fileName ? warpGlobe.maps[map.warps.fileName].get(x, y) : globe.get(x, y);
             if (!cel.dots[0] && dot.dir === 1) {
                 cel.dots[0] = dot;
             } else if (dot.dir === 2 || dot.dir === 0) {
@@ -313,21 +315,21 @@ module.exports.parseCell = function (dot, cell, map) {
             dot.basicMove();
             return false;
         default: // TODO: Do file warpmap.js (WarpMapper) so this code functions.
-            // if (map.warps.isWarp(cell.op)) {
-            //     dot.basicMove();
-            //     if (map.warps.isHomeWarp(cell.op)) {
-            //         dot.changeMap(dot.prevMap, dot.prevX, dot.prevY);
-            //     } else if (map.warps.isImportWarp(cell.op)) {
-            //         let [mMap, mX, mY] = map.warps.getImportData(cell.op);
-            //         dot.changeMap(mMap, mX, mY);
-            //     } else {
-            //         let pos = map.warps.find(cell.op, dot.x, dot.y);
-            //         dot.x = pos.x;
-            //         dot.y = pos.y;
-            //     }
-            //     return false;
-            // }
             dot.basicMove();
+
+            if (map.warps.isHomeWarp(cell.op)) {
+                console.log("home warp")
+                dot.revertMap();
+            } else if (map.warps.isImportWarp(cell.op)) {
+                console.log("import warp")
+                let data = map.warps.getImport(cell.op);
+                dot.changeMap(data[0], data[1], data[2])
+            } else if (map.warps.isWarp(cell.op)) {
+                let pos = map.warps.find(cell.op, dot.x, dot.y);
+                dot.x = pos.x;
+                dot.y = pos.y;
+            }
+
             return false;
     }
 

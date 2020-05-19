@@ -3,6 +3,8 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 
 ## Current Syntax
 
+There are many different scripts that currently aren't working (in terms of imports). If anybody feels like it, I would appreciate it if you could leave a pull request at my github with a fix of some sort. If you want some scripts to test, look here: [Samples](https://github.com/aaronjanse/asciidots/tree/master/samples)
+
 |  Character  | Description |
 | :---: | :--- |
 | \- | Allows the dot to move horizontally |
@@ -30,8 +32,13 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 | {} | Operates similar to `[]`, but a horizontal dot is eval'd against a vertical dot and the horizontal dot is outputed |
 | & | Ends the program |
 | "" or '' | Marks a string that the value or print command can use |
+| %! | Imports a file as a character. Do not specificy the directory if you want to use a built in library. Usage: `%!file.dots f` |
+| %^ | Used when creating your own library. The character following it will be the entry and exit point for the library |
+| %$ | Used to denote warps. You can put multiple letters next to eachother to denote multiple warps. You can only use a warp twice in the code |
 
 If there is any functionality missing (Works on the [official website](https://asciidots.herokuapp.com) and doesn't work here) then please leave an issue on github with the code that should work! Thanks :)
+
+TODO: Make it so `@{+}`, `#{1}`, or any operation similar to that will work
 
 ## Installation
 Run

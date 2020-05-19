@@ -6,6 +6,9 @@ module.exports = class Pointer {
     constructor (parent, map) {
         this.dot = parent;
         this.map = map;
+        this.prevMap = parent.prevMap || false;
+        this.prevX = parent.prevX || false;
+        this.prevY = parent.prevY || false;
 
         this.delete = false;
 
@@ -51,13 +54,32 @@ module.exports = class Pointer {
         parser.parseCell(this, next, this.map);
     }
 
+    createDot(x, y, dir) {
+        let d = new Pointer(this, this.map);
+        d.x = x;
+        d.y = y;
+        d.dir = dir;
+
+        return d;
+    }
+
     changeMap(newMap, x, y) {
         this.prevMap = this.map;
-        this.prevX = x;
-        this.prevY = y;
-        this.map = newMap;
+        this.prevX = this.x;
+        this.prevY = this.y;
 
+        this.map = newMap;
         this.x = x;
         this.y = y;
+    }
+
+    revertMap() {
+        this.map = this.prevMap;
+        this.x = this.prevX;
+        this.y = this.prevY;
+
+        this.prevMap = false;
+        this.prevX = false;
+        this.prevY = false;
     }
 }

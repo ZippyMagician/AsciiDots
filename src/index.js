@@ -1,7 +1,7 @@
 const CellMap = require('./cellmap');
 var PointerDot = require('./pointer');
 const globe = require('./global/cells');
-//const WarpMapper = require('./warpmap');
+const WarpMapper = require('./warpmap');
 
 const requestAnimationFrame = function(f) {
     return setTimeout(f, 1000 / 60);
@@ -11,18 +11,18 @@ function main(input, map_size) {
     module.exports.dots = [];
     let dots = module.exports.dots;
 
-    //let warpMap = new WarpMapper(input);
+    let warpMap = new WarpMapper(input, map_size);
 
-    let map = new CellMap(input, map_size);//, warpMap);
+    let map = new CellMap(input, map_size, warpMap);
     for (var dot in map.dot_pos) {
         dots.push(new PointerDot(map.dot_pos[dot], map));
     }
-    globe.tiles = dots[0].map.tiles;
+    globe.tiles = map.tiles;
 
     requestAnimationFrame(dotTick.bind(false, dots));
 }
 
-function dotTick(dots) {
+var dotTick = async (dots) => {
     for (var index in dots) {
         let del = 0;
         for (var i in dots) {
@@ -45,6 +45,6 @@ function dotTick(dots) {
 
 module.exports.execute = main;
 
-module.exports.createDot = function createDot(parent, map) {
-    this.dots.push(new PointerDot(parent, map));
+module.exports.createDot = function createDot(dot) {
+    this.dots.push(dot);
 }
