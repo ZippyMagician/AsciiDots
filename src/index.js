@@ -7,6 +7,8 @@ const requestAnimationFrame = function(f) {
     return setTimeout(f, 1000 / 60);
 };
 
+module.exports.exportCounter = 0;
+
 function main(input, map_size) {
     module.exports.dots = [];
     let dots = module.exports.dots;
@@ -19,7 +21,15 @@ function main(input, map_size) {
     }
     globe.tiles = map.tiles;
 
-    process.nextTick(() => dotTick(dots));
+    wait_init(dots);
+}
+
+function wait_init(dots) {
+    if (module.exports.exportCounter === 0) {
+        requestAnimationFrame(dotTick.bind(false, dots));
+    } else {
+        requestAnimationFrame(wait_init.bind(false, dots));
+    }
 }
 
 var dotTick = async (dots) => {

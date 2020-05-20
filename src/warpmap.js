@@ -1,4 +1,5 @@
 const CellMap = require('./cellmap');
+const globalIndex = require('./index');
 const globalWarp = require('./global/warp_cells');
 const fs = require('fs');
 
@@ -46,6 +47,7 @@ module.exports = class WarpMapper {
                         for (let ch of [...item.substr(2)]) this.nWarps.push(ch);
                         break;
                     case '%!':
+                        globalIndex.exportCounter += 1;
                         this._getImportData(item.split(' ')[0].substr(2)).then(data => {
                             this.iWarps.push({data: data, name: item.split(' ')[1]});
                         });
