@@ -64,7 +64,6 @@ module.exports = class Pointer {
         d.x = x;
         d.y = y;
         d.dir = dir;
-        d.want_value = this.want_value;
 
         return d;
     }
