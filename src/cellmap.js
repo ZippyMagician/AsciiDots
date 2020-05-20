@@ -59,8 +59,6 @@ class CellMap {
         
         for (var y = 0; y < code.length; y++) {
             for (var x = 0; x < this.dimension[0]; x++) {
-                //console.log(code, x, y);
-                //console.log(map.tiles);
                 let obj = this.get(x, y);
                 obj.op = code[y][x];
                 obj.dots = obj.op === "." ? 1 : new Array(2);

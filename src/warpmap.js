@@ -96,7 +96,7 @@ module.exports = class WarpMapper {
                     if (err) return reject(err);
                     dat = String.raw`${dat}`.replace(/C7/g, '/');;
                     let arr = [parseInt(longest(dat.split(/\n/g))), dat.split(/\n/g).length];
-                    let wMap = new WarpMapper(dat, arr);
+                    let wMap = new WarpMapper(dat, arr, file);
 
                     globalWarp.createGlobalWarp(file, arr);
     

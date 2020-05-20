@@ -6,21 +6,26 @@ module.exports = class Pointer {
     constructor (parent, map) {
         this.dot = parent;
         this.map = map;
-        this.prevMap = parent.prevMap || false;
-        this.prevX = parent.prevX || false;
-        this.prevY = parent.prevY || false;
+        this.prevMap = parent.prevMap ? parent.prevMap : false;
+        this.prevX = parent.prevX ? parent.prevX : false;
+        this.prevY = parent.prevY ? parent.prevY : false;
 
         this.delete = false;
 
-        this.value = 0;
-        this.address = 0;
+        this.value = parent.value ? parent.value : 0;
+        this.address = parent.address ? parent.address : 0;
 
-        if (parent.value) this.value = parent.value;
+        this.x = parent.x ? parent.x : 0;
+        this.y = parent.y ? parent.y : 0;
 
-        this.x = this.dot.x;
-        this.y = this.dot.y;
+        this.dir = parent.dir ? parent.dir : this.findDir();
 
-        this.dir = parent.dir !== undefined ? parent.dir : this.findDir();
+        this.want_address = parent.want_address || false;
+    }
+
+    maybeAddress(value) {
+        if (this.want_address) this.address = value;
+        else this.value = value;
     }
 
     findDir() {
@@ -59,6 +64,7 @@ module.exports = class Pointer {
         d.x = x;
         d.y = y;
         d.dir = dir;
+        d.want_value = this.want_value;
 
         return d;
     }
