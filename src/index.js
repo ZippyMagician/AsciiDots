@@ -19,7 +19,7 @@ function main(input, map_size) {
     }
     globe.tiles = map.tiles;
 
-    requestAnimationFrame(dotTick.bind(false, dots));
+    process.nextTick(() => dotTick(dots));
 }
 
 var dotTick = async (dots) => {
@@ -40,7 +40,7 @@ var dotTick = async (dots) => {
         }
     }
 
-    requestAnimationFrame(dotTick.bind(false, dots));
+    process.nextTick(() => dotTick(dots))
 }
 
 module.exports.execute = main;
