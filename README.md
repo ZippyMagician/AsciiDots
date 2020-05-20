@@ -3,7 +3,7 @@ This project is a Node.JS interpreter for the esolang [ASCIIDots](https://esolan
 
 ## Current Syntax
 
-There are many different scripts that currently aren't working (in terms of imports). If anybody feels like it, I would appreciate it if you could leave a pull request at my github with a fix of some sort. If you want some scripts to test, look here: [Samples](https://github.com/aaronjanse/asciidots/tree/master/samples)
+Currently import scripts don't seem to work properly when they involve operations that store and recall dots for later. Any advice would be appreciated.
 
 |  Character  | Description |
 | :---: | :--- |
@@ -37,8 +37,6 @@ There are many different scripts that currently aren't working (in terms of impo
 | %$ | Used to denote warps. You can put multiple letters next to eachother to denote multiple warps. You can only use a warp twice in the code |
 
 If there is any functionality missing (Works on the [official website](https://asciidots.herokuapp.com) and doesn't work here) then please leave an issue on github with the code that should work! Thanks :)
-
-TODO: Make it so `@{+}`, `#{1}`, or any operation similar to that will work
 
 ## Installation
 Run
